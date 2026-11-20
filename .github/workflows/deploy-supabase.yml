@@ -1,0 +1,33 @@
+
+name: Deploy AMT AI Supabase Function
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/functions/smart-responder/**"
+      - ".github/workflows/deploy-supabase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Edge Function
+        run: supabase functions deploy smart-responder --project-ref ytafhvcgyhigztrohzby --yes
